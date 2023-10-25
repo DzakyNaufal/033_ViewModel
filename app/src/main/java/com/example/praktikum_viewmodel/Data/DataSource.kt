@@ -1,8 +1,10 @@
 package com.example.praktikum_viewmodel.Data
 
+import com.example.praktikum_viewmodel.R
+
 object DataSource {
     val jenis = listOf(
-        "Laki",
-        "Perempuan",
+        R.string.Laki,
+        R.string.Perempuan,
     )
 }

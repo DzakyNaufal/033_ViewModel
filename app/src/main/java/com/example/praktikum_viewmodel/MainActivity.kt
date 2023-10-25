@@ -79,7 +79,7 @@ fun TampilLayout(modifier: Modifier = Modifier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TampilForm(cobaViewModel: CobaViewModel = viewModel()){
+fun TampilForm(cobaViewModel: CobaViewModel = CobaViewModel()){
 
     var textNama by remember { mutableStateOf("") }
     var textTlp by remember { mutableStateOf("") }
