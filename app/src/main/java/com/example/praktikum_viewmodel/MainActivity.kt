@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.praktikum_viewmodel.Data.DataForm
 import com.example.praktikum_viewmodel.Data.DataSource.jenis
+import com.example.praktikum_viewmodel.Data.DataSource.status
 import com.example.praktikum_viewmodel.ui.theme.Praktikum_ViewModelTheme
 import java.net.SocketOptions
 
@@ -83,6 +84,8 @@ fun TampilForm(cobaViewModel: CobaViewModel = CobaViewModel()){
 
     var textNama by remember { mutableStateOf("") }
     var textTlp by remember { mutableStateOf("") }
+    var textEmail by remember { mutableStateOf("") }
+    var textAlamat by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val dataForm: DataForm
@@ -107,26 +110,51 @@ fun TampilForm(cobaViewModel: CobaViewModel = CobaViewModel()){
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Telpon") },
         onValueChange = {
-            textNama = it
+            textTlp = it
+        }
+    )
+    OutlinedTextField(
+        value = textEmail,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        shape = MaterialTheme.shapes.large,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Email") },
+        onValueChange = {
+            textEmail = it
         }
     )
     SelectJK(
         options = jenis.map { id -> context.resources.getString(id) },
         onSelectionChanged = { cobaViewModel.setJenisK(it) })
+
     Button(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { cobaViewModel.insertData(textNama,textTlp, dataForm.sex)
+        onClick = { cobaViewModel.insertData(textNama,textTlp,textEmail,textAlamat,dataForm.status,dataForm.sex)
         }
     ) {
         Text(text = stringResource(R.string.Submit),
             fontSize = 16.sp
         )
     }
+    OutlinedTextField(
+        value = textAlamat,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        shape = MaterialTheme.shapes.large,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Alamat") },
+        onValueChange = {
+            textAlamat = it
+        }
+    )
     Spacer(modifier = Modifier.height(100.dp))
     TextHasil(
         namanya = cobaViewModel.namaUsr,
         teleponnya = cobaViewModel.noTlp,
-        jenisnya = cobaViewModel.jenisKl
+        jenisnya = cobaViewModel.jenisKl,
+        emailnya = cobaViewModel.email,
+        alamatnya = cobaViewModel.alamat,
     )
 }
 
@@ -157,12 +185,32 @@ fun SelectJK(options: List<String>,onSelectionChanged: (String) -> Unit = {}
             }
         }
     }
+    Column (modifier = Modifier.padding(16.dp)) {
+        options.forEach { item ->
+            Row (
+                modifier = Modifier.selectable(
+                    selected = selectedValue == item,
+                    onClick = {
+                        selectedValue = item
+                        onSelectionChanged(item)
+                    }
+                ),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                RadioButton(
+                    selected = selectedValue == item,
+                    onClick = { selectedValue = item
+                        onSelectionChanged(item)
+                    }
+                )
+                Text(item)
+            }
+        }
+    }
 }
 
-
-
 @Composable
-fun TextHasil(namanya: String, teleponnya: String, jenisnya: String){
+fun TextHasil(namanya: String, teleponnya: String, jenisnya: String, emailnya: String, alamatnya: String){
     ElevatedCard (
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier.fillMaxWidth()
@@ -177,6 +225,14 @@ fun TextHasil(namanya: String, teleponnya: String, jenisnya: String){
         )
         Text(
             text = "Jenis Kelamin : " + jenisnya,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+        )
+        Text(
+            text = "Email : " + emailnya,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+        )
+        Text(
+            text = "Alamat : " + alamatnya,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
         )
     }
